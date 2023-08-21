@@ -1,8 +1,42 @@
 #include "main.h"
 #include <unistd.h>
 #include <stdarg.h>
-#include <string.h>
 #include <stdlib.h>
+
+/**
+ * handle_specifiers - handles char
+ * @args: variadic arguments
+ * @format: the initial string to extract specifiers from
+ *
+ * Return: int
+ */
+
+int handle_specifiers(const char **format, va_list *args)
+{
+	int c;
+
+	switch (*(++(*format)))
+	{
+		case 'c':
+			c = write_char(args);
+			break;
+		case 's':
+			c = write_string(args);
+			break;
+		case '%':
+			c = write(1, "%", 1);
+			break;
+		case 'i':
+		case 'd':
+			c = write_int(args);
+			break;
+		default:
+			--(*format);
+			c = write(1, *format, 1);
+			break;
+	}
+	return (c);
+}
 
 /**
  * _printf - mimics std printf
@@ -13,8 +47,7 @@
 
 int _printf(const char *format, ...)
 {
-	int a, b, s, c, d;
-	int sum = 0;
+	int c, sum = 0;
 	va_list args;
 
 	if (!format)
@@ -24,43 +57,19 @@ int _printf(const char *format, ...)
 
 	while (*format != '\0')
 	{
-		if (*format == '%' && *(format + 1) == 'c')
+		if (*format == '%')
 		{
-			c = write_char(&args);
+			c = handle_specifiers(&format, &args);
 			if (c == -1)
 				return (c);
 			sum += c;
-			format += 2;
-		}
-		else if (*format == '%' && *(format + 1) == 's')
-		{
-			s = write_string(&args);
-			if (s == -1)
-				return (s);
-			sum += s;
-			format += 2;
-		}
-		else if (*format == '%' && *(format + 1) == '%')
-		{
-			b = write(1, "%", 1);
-			if (b == -1)
-				return (b);
-			sum++;
-			format += 2;
-		}
-		else if ((*format == '%' && *(format + 1) == 'i') || (*format == '%' && *(format + 1) == 'd'))
-		{
-			d = write_int(&args);
-			if (d == -1)
-				return (d);
-			sum += d;
-			format += 2;
+			format++;
 		}
 		else
 		{
-			a = write(1, format, 1);
-			if (a == -1)
-				return (a);
+			c = write(1, format, 1);
+			if (c == -1)
+				return (c);
 			sum++;
 			format++;
 		}
