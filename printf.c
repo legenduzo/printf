@@ -30,6 +30,12 @@ int handle_specifiers(const char **format, va_list *args)
 		case 'd':
 			c = write_int(args);
 			break;
+		case ' ':
+			c = -1;
+			break;
+		case '\0':
+			c = -1;
+			break;
 		default:
 			--(*format);
 			c = write(1, *format, 1);
