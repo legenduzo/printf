@@ -17,12 +17,14 @@ int write_int(va_list *args)
 	char *buffer;
 
 	number = va_arg(*args, int);
-	if (!number)
-		return (-1);
+
 	buffer = int_to_string(number);
 	if (!buffer)
 		return (-1);
+
 	result = write(1, buffer, strlen(buffer));
+
 	free(buffer);
+
 	return (result);
 }

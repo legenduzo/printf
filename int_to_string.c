@@ -32,7 +32,8 @@ void reverse_string(char *s)
 char *int_to_string(int number)
 {
 	char *s;
-	int i = 0, negative = 0;
+	int i = 0;
+	long n = number;
 
 	s = malloc(12);
 	if (!s)
@@ -44,16 +45,14 @@ char *int_to_string(int number)
 		return (s);
 	}
 	if (number < 0)
-	{
-		negative = 1;
-		number = -number;
-	}
+		n = -n;
+
 	while (number != 0)
 	{
 		s[i++] = '0' + number % 10;
 		number /= 10;
 	}
-	if (negative)
+	if (number < 0)
 		s[i++] = '-';
 	s[i] = '\0';
 	reverse_string(s);
