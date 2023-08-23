@@ -47,10 +47,10 @@ char *int_to_string(int number)
 	if (number < 0)
 		n = -n;
 
-	while (number != 0)
+	while (n != 0)
 	{
-		s[i++] = '0' + number % 10;
-		number /= 10;
+		s[i++] = '0' + n % 10;
+		n /= 10;
 	}
 	if (number < 0)
 		s[i++] = '-';
